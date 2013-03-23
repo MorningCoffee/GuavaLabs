@@ -8,7 +8,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * TODO Document this type
+ * Exploring Optional type that fight null-driven development designs
  * Date: 3/23/13
  *
  * @author osklyarenko
