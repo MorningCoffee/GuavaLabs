@@ -62,4 +62,16 @@ public class OptionalTest {
         assertFalse(optionalInteger.hashCode() == optionalInteger.get().hashCode());
         assertFalse(Optional.absent().hashCode() == 0);
     }
+
+    /**
+     * You can't call Optional#get on absent optionals - throws IllegalStateException.
+     * When you call #get value must always be present
+     * @throws Exception
+     */
+    @Test(expected = IllegalStateException.class)
+    public void testOptionalAbsent() throws Exception {
+        final Optional<?> absent = Optional.absent();
+
+        absent.get();
+    }
 }
