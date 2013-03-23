@@ -2,7 +2,6 @@ package com.morningcoffee.guava;
 
 
 import com.google.common.base.Optional;
-import junit.framework.Assert;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;
@@ -38,7 +37,7 @@ public class OptionalTest {
     }
 
     /**
-     * Optional#toString does not return value.toString
+     * Optional#toString value is NOT equal to value.toString()
      * @throws Exception
      */
     @Test
@@ -47,5 +46,18 @@ public class OptionalTest {
         assertFalse(optionalString.toString().equals("string"));
 
         System.out.println(optionalString.toString());
+    }
+
+    /**
+     * Optional#hashCode value is NOT equal to value.hashCode()
+     * @throws Exception
+     */
+    @Test
+    public void testOptionalHashCode() throws Exception {
+        final Optional<String> optionalString = Optional.of("string");
+        final Optional<Integer> optionalInteger = Optional.of(47);
+
+        assertFalse(optionalString.hashCode() == optionalString.get().hashCode());
+        assertFalse(optionalInteger.hashCode() == optionalInteger.get().hashCode());
     }
 }
