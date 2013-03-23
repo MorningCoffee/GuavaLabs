@@ -9,6 +9,8 @@ import static junit.framework.Assert.assertTrue;
 
 /**
  * Exploring Optional type that fight null-driven development designs
+ *
+ * @see <a href="https://code.google.com/p/guava-libraries/wiki/UsingAndAvoidingNullExplained">Guava Guide Article</a>
  * Date: 3/23/13
  *
  * @author osklyarenko
