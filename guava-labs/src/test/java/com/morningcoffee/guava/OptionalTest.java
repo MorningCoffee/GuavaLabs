@@ -57,7 +57,9 @@ public class OptionalTest {
         final Optional<String> optionalString = Optional.of("string");
         final Optional<Integer> optionalInteger = Optional.of(47);
 
+
         assertFalse(optionalString.hashCode() == optionalString.get().hashCode());
         assertFalse(optionalInteger.hashCode() == optionalInteger.get().hashCode());
+        assertFalse(Optional.absent().hashCode() == 0);
     }
 }
