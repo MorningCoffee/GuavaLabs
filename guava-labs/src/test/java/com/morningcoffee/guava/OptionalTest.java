@@ -92,4 +92,19 @@ public class OptionalTest {
         optionalNotNull.get();
 
     }
+
+
+    /**
+     * When specifying argument for Optional#or its value must always be defined otherwise NPE is thrown
+     * @throws Exception
+     */
+    @Test(expected = NullPointerException.class)
+    public void testOptionalOr1() throws Exception {
+        final Optional<Object> optionalNull = Optional.fromNullable(null);
+
+        final Object defaultValue = optionalNull.or("default");
+        assertTrue(defaultValue.equals("default"));
+
+        optionalNull.or((Object)null); // throws NPE
+    }
 }
