@@ -4,6 +4,7 @@ package com.morningcoffee.guava;
 import com.google.common.base.Optional;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -106,5 +107,25 @@ public class OptionalTest {
         assertTrue(defaultValue.equals("default"));
 
         optionalNull.or((Object)null); // throws NPE
+    }
+
+    /**
+     * Optional#or can also accept optionals as argument
+     * @throws Exception
+     */
+    @Test
+    public void testOptionalOr2() throws Exception {
+        final Optional<Object> optionalNull = Optional.fromNullable(null);
+        final Optional<String> reference = Optional.of("reference");
+
+        final Optional<Object> defaultValue = optionalNull.or(reference);
+        assertTrue(defaultValue.isPresent());
+        assertEquals(defaultValue.get(), "reference");
+    }
+
+    @Test
+    public void testOptionalOr3() throws Exception {
+
+
     }
 }
