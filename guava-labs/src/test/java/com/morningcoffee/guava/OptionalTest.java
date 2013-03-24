@@ -104,6 +104,7 @@ public class OptionalTest {
         final Optional<Object> optionalNull = Optional.fromNullable(null);
 
         final Object defaultValue = optionalNull.or("default");
+        assertTrue(defaultValue == "default");
         assertTrue(defaultValue.equals("default"));
 
         optionalNull.or((Object)null); // throws NPE
@@ -116,16 +117,25 @@ public class OptionalTest {
     @Test
     public void testOptionalOr2() throws Exception {
         final Optional<Object> optionalNull = Optional.fromNullable(null);
-        final Optional<String> reference = Optional.of("reference");
+        final Optional<?> reference = Optional.of("reference");
 
-        final Optional<Object> defaultValue = optionalNull.or(reference);
+        final Optional<?> defaultValue = optionalNull.or(reference);
+        assertTrue(defaultValue == reference);
         assertTrue(defaultValue.isPresent());
         assertEquals(defaultValue.get(), "reference");
     }
 
+    /**
+     * If null optional is passed to Optional#or method than it's OK, no exception is thrown
+     * @throws Exception
+     */
     @Test
     public void testOptionalOr3() throws Exception {
+        final Optional<Object> optionalNull = Optional.fromNullable(null);
+        final Optional<Object> defaultOptional = Optional.fromNullable(null);
+        final Optional<Object> resultingDefaultOptional = optionalNull.or(defaultOptional);
 
-
+        assertTrue(defaultOptional == resultingDefaultOptional);
+        assertFalse(resultingDefaultOptional.isPresent());
     }
 }
