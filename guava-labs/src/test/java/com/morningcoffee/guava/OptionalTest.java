@@ -67,7 +67,7 @@ public class OptionalTest {
 
     /**
      * You can't call Optional#get on absent optionals - throws IllegalStateException.
-     * When you call #get value must always be present
+     * When you call Optional#get value must always be present
      * @throws Exception
      */
     @Test(expected = IllegalStateException.class)
@@ -75,5 +75,21 @@ public class OptionalTest {
         final Optional<?> absent = Optional.absent();
 
         absent.get();
+    }
+
+    /**
+     * Optional#fromNullable factory method allows you to create optionals from from possibly null references. Still
+     * you are forced to check for existence of value with Optional#isPresent before calling Optional#get
+     * @throws Exception
+     */
+    @Test
+    public void testOptionalFromNullable() throws Exception {
+        final Optional<?> optionalNull = Optional.fromNullable(null);
+        assertFalse(optionalNull.isPresent());
+
+        final Optional<Object> optionalNotNull = Optional.fromNullable(new Object());
+        assertTrue(optionalNotNull.isPresent());
+        optionalNotNull.get();
+
     }
 }
