@@ -4,9 +4,7 @@ package com.morningcoffee.guava;
 import com.google.common.base.Optional;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 /**
  * Exploring Optional type that fight null-driven development designs
@@ -137,5 +135,31 @@ public class OptionalTest {
 
         assertTrue(defaultOptional == resultingDefaultOptional);
         assertFalse(resultingDefaultOptional.isPresent());
+    }
+
+    /**
+     * Optional#orNull method allows to return null reference when original value is also null
+     * @throws Exception
+     */
+    @Test
+    public void testOptionalOrNull1() throws Exception {
+        final Optional<?> optionalNull = Optional.fromNullable("value");
+        final Object value = optionalNull.orNull();
+
+        assertNotNull(value);
+        assertTrue(value == "value");
+        assertEquals(value, "value");
+    }
+
+    /**
+     * Optional#orNull returns null when original value is absent
+     * @throws Exception
+     */
+    @Test
+    public void testOptionalOrNull2() throws Exception {
+        final Optional<Object> optionalNull = Optional.fromNullable(null);
+        final Object _ = optionalNull.orNull();
+
+        assertNull(_);
     }
 }
