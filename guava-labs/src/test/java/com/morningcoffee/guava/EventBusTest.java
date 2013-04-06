@@ -6,12 +6,12 @@ import com.google.common.eventbus.Subscribe;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.*;
 
 import static java.lang.String.format;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static junit.framework.Assert.*;
 
 /**
  * Exploring EventBus type
@@ -51,7 +51,7 @@ public class EventBusTest {
     public void testConcurrentSetOfEvents() throws Exception {
         int N = 1000000;
         CountDownLatch latch = new CountDownLatch(N);
-        ArrayList<Integer> countList = new ArrayList<Integer>(N);
+        List<Integer> countList = Collections.synchronizedList(new ArrayList<Integer>(N));
 
 
         bus.register(new ConcurrentListener(latch, countList));
@@ -72,6 +72,40 @@ public class EventBusTest {
 
     }
 
+    @Test
+    public void testConcurrentPost() throws Exception {
+
+        final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+        int N = 1000;
+        CountDownLatch latch = new CountDownLatch(N);
+        ArrayList<Integer> counterList = new ArrayList<Integer>(N);
+        bus.register(new ConcurrentListener(latch, counterList));
+
+        for (int i = 0; i < N; i++) {
+            final int finalI = i;
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    bus.post(new Event(format("event_%d", finalI), finalI));
+                }
+            });
+        }
+
+       if (!latch.await(10000, TimeUnit.MILLISECONDS)) {
+           fail();
+       }
+
+
+        assertEquals(counterList.size(), N);
+//
+//        for (int i = 0; i < N; i++) {
+//            assertTrue(counterList.get(i) == i);
+//        }
+
+
+    }
+
     static class Event {
         final String name;
         final int num;
@@ -84,9 +118,9 @@ public class EventBusTest {
 
     static class ConcurrentListener {
         final CountDownLatch latch;
-        final ArrayList<Integer> eventCount;
+        final List<Integer> eventCount;
 
-        ConcurrentListener(CountDownLatch latch, ArrayList<Integer> eventCount) {
+        ConcurrentListener(CountDownLatch latch, List<Integer> eventCount) {
             this.latch = latch;
             this.eventCount = eventCount;
         }
