@@ -1,6 +1,7 @@
 package com.morningcoffee.guava;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
+import com.google.common.eventbus.DeadEvent;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.junit.Test;
@@ -113,6 +114,22 @@ public class EventBusTest {
 
     }
 
+    @Test
+    public void testDeadEvents() throws Exception {
+        CountDownLatch latch = new CountDownLatch(3);
+        bus.register(new DeadEventListener(latch));
+
+        bus.post(new Object());
+        bus.post("string");
+        bus.post(new DeadEvent(null, null));
+
+        if (!latch.await(100, TimeUnit.MILLISECONDS)) {
+            fail();
+        }
+
+
+    }
+
     static class Event {
         final String name;
         final int num;
@@ -158,6 +175,23 @@ public class EventBusTest {
             if (eventCount != null) {
                 eventCount.add(e.num);
             }
+        }
+
+    }
+
+
+    static class DeadEventListener{
+        CountDownLatch latch;
+
+
+        DeadEventListener(CountDownLatch latch) {
+            this.latch = latch;
+
+        }
+
+        @Subscribe
+        public void listen(DeadEvent ignore) {
+            latch.countDown();
         }
 
     }
