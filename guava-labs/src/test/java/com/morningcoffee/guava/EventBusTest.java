@@ -79,7 +79,7 @@ public class EventBusTest {
 
         int N = 1000;
         CountDownLatch latch = new CountDownLatch(N);
-        ArrayList<Integer> counterList = new ArrayList<Integer>(N);
+        List<Integer> counterList = Collections.synchronizedList(new ArrayList<Integer>(N));
         bus.register(new ConcurrentListener(latch, counterList));
 
         for (int i = 0; i < N; i++) {
@@ -98,10 +98,17 @@ public class EventBusTest {
 
 
         assertEquals(counterList.size(), N);
-//
-//        for (int i = 0; i < N; i++) {
-//            assertTrue(counterList.get(i) == i);
-//        }
+
+        boolean sequential = true;
+        for (int i = 0; i < N; i++) {
+            sequential = counterList.get(i) == i;
+
+            if (!sequential) {
+                break;
+            }
+        }
+
+        assertFalse(sequential);
 
 
     }
